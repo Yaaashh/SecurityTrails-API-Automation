@@ -1,6 +1,7 @@
 import requests
 import argparse
 import datetime
+import os
 import json
 
 # Replace with your actual SecurityTrails API key
@@ -33,86 +34,94 @@ def run_securitytrails(target):
     # DOMAIN - Current DNS records
     try:
         dns_records = fetch_api_data(f"domain/{sanitized_target}/dns")
-        results['Current DNS Records'] = dns_records
+        results["Current DNS records"] = dns_records
     except Exception as e:
-        results['Error fetching DNS records'] = str(e)
+        results["Error fetching DNS records"] = str(e)
 
     # DOMAIN - Historical DNS records
     try:
         historical_dns = fetch_api_data(f"history/{sanitized_target}/dns/a")
-        results['Historical DNS Records'] = historical_dns
+        results["Historical DNS records"] = historical_dns
     except Exception as e:
-        results['Error fetching historical DNS records'] = str(e)
+        results["Error fetching historical DNS records"] = str(e)
 
     # DOMAIN - Get Subdomains
     try:
         subdomains = fetch_api_data(f"domain/{sanitized_target}/subdomains")
-        results['Subdomains'] = subdomains
+        results["Subdomains"] = subdomains
     except Exception as e:
-        results['Error fetching subdomains'] = str(e)
+        results["Error fetching subdomains"] = str(e)
 
     # DOMAIN WHOIS - Current WHOIS
     try:
         whois_current = fetch_api_data(f"domain/{sanitized_target}/whois")
-        results['Current WHOIS'] = whois_current
+        results["Current WHOIS"] = whois_current
     except Exception as e:
-        results['Error fetching current WHOIS'] = str(e)
+        results["Error fetching current WHOIS"] = str(e)
 
     # DOMAIN WHOIS - Historical WHOIS
     try:
         whois_historical = fetch_api_data(f"history/{sanitized_target}/whois")
-        results['Historical WHOIS'] = whois_historical
+        results["Historical WHOIS"] = whois_historical
     except Exception as e:
-        results['Error fetching historical WHOIS'] = str(e)
+        results["Error fetching historical WHOIS"] = str(e)
 
     # DOMAIN WHOIS - Reverse WHOIS
     try:
-        reverse_whois = fetch_api_data(f"domain/{sanitized_target}/whois")  # Adjust endpoint if needed
-        results['Reverse WHOIS'] = reverse_whois
+        reverse_whois = fetch_api_data(f"domain/{sanitized_target}/whois")
+        results["Reverse WHOIS"] = reverse_whois
     except Exception as e:
-        results['Error fetching reverse WHOIS'] = str(e)
+        results["Error fetching reverse WHOIS"] = str(e)
 
     # DOMAIN WHOIS - WHOIS searching
     try:
-        whois_searching = fetch_api_data(f"domain/{sanitized_target}/whois")  # Adjust endpoint if needed
-        results['WHOIS Searching'] = whois_searching
+        whois_searching = fetch_api_data(f"domain/{sanitized_target}/whois")
+        results["WHOIS searching"] = whois_searching
     except Exception as e:
-        results['Error fetching WHOIS searching'] = str(e)
+        results["Error fetching WHOIS searching"] = str(e)
 
     # IPS - IP address research
     try:
         ip_research = fetch_api_data(f"ips/{sanitized_target}/whois")
-        results['IP Address Research'] = ip_research
+        results["IP address research"] = ip_research
     except Exception as e:
-        results['Error fetching IP address research'] = str(e)
+        results["Error fetching IP address research"] = str(e)
 
     # IPS - Reverse DNS searching
     try:
-        reverse_dns = fetch_api_data(f"ips/{sanitized_target}/reverse")  # Adjust endpoint if needed
-        results['Reverse DNS Searching'] = reverse_dns
+        reverse_dns = fetch_api_data(f"ips/{sanitized_target}/reverse")
+        results["Reverse DNS searching"] = reverse_dns
     except Exception as e:
-        results['Error fetching reverse DNS searching'] = str(e)
+        results["Error fetching reverse DNS searching"] = str(e)
 
     # ADVANCED FEATURES - DSL
     try:
-        dsl = fetch_api_data(f"domain/{sanitized_target}/dsl")  # Adjust endpoint if needed
-        results['DSL - Domain Specific Language'] = dsl
+        dsl = fetch_api_data(f"domain/{sanitized_target}/dsl")
+        results["DSL - Domain Specific Language"] = dsl
     except Exception as e:
-        results['Error fetching DSL data'] = str(e)
+        results["Error fetching DSL data"] = str(e)
 
     # ADVANCED FEATURES - Associated domains
     try:
         associated_domains = fetch_api_data(f"domain/{sanitized_target}/associated")
-        results['Associated Domains'] = associated_domains
+        results["Associated domains"] = associated_domains
     except Exception as e:
-        results['Error fetching associated domains'] = str(e)
+        results["Error fetching associated domains"] = str(e)
 
     # ADVANCED FEATURES - Consulting services
     try:
-        consulting_services = fetch_api_data(f"domain/{sanitized_target}/consulting")  # Adjust endpoint if needed
-        results['Consulting Services'] = consulting_services
+        consulting_services = fetch_api_data(f"domain/{sanitized_target}/consulting")
+        results["Consulting services"] = consulting_services
     except Exception as e:
-        results['Error fetching consulting services'] = str(e)
+        results["Error fetching consulting services"] = str(e)
+
+    # IPS - Neighboring IPs
+    try:
+        # Assuming the target is an IP address for this endpoint
+        neighboring_ips = fetch_api_data(f"ips/nearby/{sanitized_target}")
+        results["Neighboring IPs"] = neighboring_ips
+    except Exception as e:
+        results["Error fetching neighboring IPs"] = str(e)
 
     # Write results to JSON file
     with open(output_file, 'w') as outfile:
